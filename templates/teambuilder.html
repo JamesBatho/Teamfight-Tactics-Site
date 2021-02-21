@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Teambuilder</h1>
+<div class="container">
+  <div class="row" id="whole">
+    <div class="col-3" id="champion_list">
+      {% for champion, idx in champions %}
+      <img
+        src="{{champion}}"
+        alt=""
+        draggable="true"
+        ondragstart="drag(event)"
+        id="champ-{{idx}}"
+      />
+      {% endfor %}
+    </div>
+    <div class="col-9" id="board">
+      <ul id="grid" class="clear">
+        {% for n in range(28)%}
+        <li>
+          <div
+            class="hexagon"
+            ondrop="drop(event)"
+            ondragover="allowDrop(event)"
+            id="pos-{{n}}"
+          ></div>
+        </li>
+        {% endfor %}
+      </ul>
+      <form action="/save" methods="POST" class="mt-5">
+        <label for="composition"> Name your composition: </label>
+        <input
+          type="text"
+          name="composition"
+          id="composition"
+          placeholder="Composition Name"
+        />
+        <button class="btn btn-success">Save</button>
+      </form>
+      <a href="/teambuilder" class="btn btn-lg btn-warning mt-2"> Reset</a>
+    </div>
+  </div>
+</div>
+<script src="static/scripts/teambuilder.js"></script>
+
+{% endblock %}

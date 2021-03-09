@@ -1,1 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm">
+      <h3>Recent Compositions</h3>
+      {% for comp in recents %}
+      <div>{{comp.name}}</div>
+      {% endfor %}
+      <!-- <a href="/stats_explorer" class="btn btn-lg btn-info"> Stat Explorer</a> -->
+    </div>
+    <div class="col-sm">
+      <h3>Want to build a composition and see your stats?</h3>
+      <h3>Sign up by clicking <a href="/signup"> Here! </a></h3>
+    </div>
+  </div>
+</div>
+<script type="module" src="static/scripts/recentGames.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.js"></script>
+{% endblock %}

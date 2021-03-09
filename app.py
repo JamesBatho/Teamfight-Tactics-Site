@@ -9,14 +9,14 @@ from sqlalchemy.exc import IntegrityError
 from forms import UserAddForm, UserEditForm, LoginForm
 import os 
 
-API_KEY = "RGAPI-b6ccae62-33b9-4a6e-bbcd-c639323bb92a";
+API_KEY = "RGAPI-7b843bf9-c460-4f3f-8349-5c55f1d91279"
 
 CURR_USER_KEY = 'curr_user_id'
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL','postgres:///tft-site')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO']= True
+# app.config['SQLALCHEMY_ECHO']= True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
@@ -105,12 +105,38 @@ def logout():
 @app.route('/teambuilder')
 def teambuilder():
     """Provide functional teambuilder for user"""
-    champions = []
-    idx = 0
-    for filename in os.listdir('static/data/champions'):
-        idx = idx + 1 
-        champions.append((os.path.join('static/data/champions',filename),idx))
-    return render_template('teambuilder.html',champions=champions)
+    if g.user: 
+        champions = db.session.query(Champion).all()
+        return render_template('teambuilder.html',champions=champions)
+    else: 
+        return redirect('/')
+
+@app.route('/teambuilder/<int:comp_id>')
+def edit_comp(comp_id):
+    if g.user: 
+        """allow user to edit comp and then save"""
+        comp = Composition.query.get_or_404(comp_id)
+        peice_ids = (comp.piece1_id,comp.piece2_id,comp.piece3_id,comp.piece4_id,comp.piece5_id,comp.piece6_id,comp.piece7_id,comp.piece8_id)
+        pieces = db.session.query(Piece).filter(Piece.id.in_(peice_ids)).all()
+        champ_ids = []
+        pos = [] 
+        for piece in pieces:
+            champ_ids.append(piece.id)
+            pos.append(piece.position)
+        champs = db.session.query(Champion).filter(Champion.id.in_(tuple(champ_ids))).all()
+
+        board = []
+        i = 0
+        while i < len(champs):
+            board.append([champs[i].img, champs[i].id, pos[i]])
+            i = i +1
+        
+        champions = db.session.query(Champion).all()
+        return render_template('edit_comp.html', comp = comp, champions=champions, pieces = pieces, champs = champs, board = board)
+    else:
+        return redirect('/')
+
+
 ##############################################################################
 # Homepage and error pages
 
@@ -122,14 +148,11 @@ def homepage():
     - anon users: homepage with 10 most recent compostions and login button 
     - logged in: recent comps on right, own comps on left, buttons for teambuilder and champ explorer 
     """
-
+    recents = db.session.query(Composition).order_by(Composition.timestamp.desc()).limit(10).all()
     ####get 10 most recent compositons 
-    # recents = (Composition.query.order_by(Composition.timestamp.desc().limit(10).all()))
-    recents = 'hi'
     if g.user:
        #get user compositions
-    #    own_comps = (Composition.query.filter(Composition.creator_id == g.user.id).all())
-       own_comps = "hey"
+       own_comps = db.session.query(Composition).filter(Composition.creator_id == g.user.id).all()
        summoner_name = g.user.summoner_name
        summoner_info = requests.get(f'https://na1.api.riotgames.com/tft/summoner/v1/summoners/by-name/{summoner_name}?api_key={API_KEY}')
        puuid = summoner_info.json()['puuid']
@@ -157,8 +180,27 @@ def homepage():
 ###########
 @app.route('/save', methods=["POST"])
 def save_comp():
+    if g.user:
 
-    return 'hi'
+        datas = request.json
+        data = datas[0]
+        name = datas[1]
+        print(len(data))
+        print(data[0][0],data[0][1])
+        i = 0 
+        pieces = []
+        while i < len(data):
+            piece = Piece(champion_id=data[i][1],position=data[i][0])
+            pieces.append(piece)
+            db.session.add(piece)
+            db.session.commit()
+            i = i+1
+        
+        comp = Composition(name=name, creator_id=g.user.id, piece1_id=pieces[0].id, piece2_id=pieces[2].id, piece3_id=pieces[2].id,piece4_id=pieces[3].id,piece5_id=pieces[4].id,piece6_id=pieces[5].id,piece7_id=pieces[6].id,piece8_id=pieces[7].id)
+
+        db.session.add(comp)
+        db.session.commit()
+        return 'added comp'
 
 
 ##############################################################################

@@ -3,17 +3,20 @@
   <div class="row">
     <div class="col-sm">
       <h3>{{g.user.username}}'s Compositions</h3>
+      {% for comp in own_comps %}
+      <div><a href="/teambuilder/{{comp.id}}">{{comp.name}}</a></div>
+      {% endfor %}
       <a href="/teambuilder" class="btn btn-lg btn-info mr-2"> Team Builder </a>
     </div>
     <div class="col-sm justify-content-center">
-      <h4>{{g.user.summoner_name}}'s Game History</h4>
+      <h3>{{g.user.summoner_name}}'s Game History</h3>
       {% if error %}
       <h4>{{error}}</h4>
       {% endif %}
       <div id="recent-games">
         <div class="row">
           <div class="col-6">
-            <h5>Game Length</h5>
+            <h5>Length</h5>
             {% for match in match_data %}
             <div class="col-6">{{match['game_length']}}</div>
             {% endfor %}
@@ -21,9 +24,9 @@
           <div class="col-6">
             <h5>Placement</h5>
             {% for match in match_data %} {% if match['placement'] >= 4 %}
-            <div class="text-danger">{{match['placement']}}</div>
+            <div class="text-danger text-center">{{match['placement']}}</div>
             {% else %}
-            <div class="text-success">{{match['placement']}}</div>
+            <div class="text-success text-center">{{match['placement']}}</div>
 
             {% endif %} {% endfor %}
           </div>
@@ -32,9 +35,11 @@
       </div>
     </div>
     <div class="col-sm">
-      <h3>Recent Compositions</h3>
-
-      <a href="/stats_explorer" class="btn btn-lg btn-info"> Stat Explorer</a>
+      <h3 class="text-center">Recent Compositions</h3>
+      {% for comp in recents %}
+      <div class="text-center">{{comp.name}}</div>
+      {% endfor %}
+      <!-- <a href="/stats_explorer" class="btn btn-lg btn-info"> Stat Explorer</a> -->
     </div>
   </div>
 </div>

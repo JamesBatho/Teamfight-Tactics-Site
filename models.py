@@ -71,6 +71,9 @@ class Champion(db.Model):
         db.Integer,
         primary_key=True,
     )
+    champ_name = db.Column(db.Text,nullable=False)
+
+    img = db.Column(db.Text)
 
 class Item(db.Model):
     """Item Data""" 
@@ -128,6 +131,8 @@ class Composition(db.Model):
     piece6_id = db.Column(db.Integer, db.ForeignKey('pieces.id', ondelete="cascade"))
     piece7_id = db.Column(db.Integer, db.ForeignKey('pieces.id', ondelete="cascade"))
     piece8_id = db.Column(db.Integer, db.ForeignKey('pieces.id', ondelete="cascade"))
+
+
 
     damage_score = db.Column(db.Float)
     utility_score = db.Column(db.Float)

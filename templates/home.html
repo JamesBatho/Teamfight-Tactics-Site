@@ -1,44 +1,76 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm">
-      <h3>{{g.user.username}}'s Compositions</h3>
-      {% for comp in own_comps %}
-      <div><a href="/teambuilder/{{comp.id}}">{{comp.name}}</a></div>
-      {% endfor %}
-      <a href="/teambuilder" class="btn btn-lg btn-info mr-2"> Team Builder </a>
+    <div class="col-sm bg-grey border rounded m-2">
+      <h3 class="text-center m-2">{{g.user.username}}'s Compositions</h3>
+      <ul class="list-group">
+        {% for comp in own_comps %}
+        <li class="list-group-item rounded m-1">
+          <a href="/teambuilder/{{comp.id}}" class="text-center"
+            >{{comp.name}}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+      <a
+        href="/teambuilder"
+        class="btn btn-lg btn-info m-1 btn-block text-center"
+      >
+        Team Builder
+      </a>
     </div>
-    <div class="col-sm justify-content-center">
-      <h3>{{g.user.summoner_name}}'s Game History</h3>
+    <div class="col-sm justify-content-center bg-grey border rounded m-2">
+      <h3 class="m-2">{{g.user.summoner_name}}'s Game History</h3>
       {% if error %}
       <h4>{{error}}</h4>
       {% endif %}
       <div id="recent-games">
         <div class="row">
           <div class="col-6">
-            <h5>Length</h5>
+            <h4>Length</h4>
             {% for match in match_data %}
             <div class="col-6">{{match['game_length']}}</div>
             {% endfor %}
           </div>
           <div class="col-6">
-            <h5>Placement</h5>
+            <h4>Placement</h4>
             {% for match in match_data %} {% if match['placement'] >= 4 %}
-            <div class="text-danger text-center">{{match['placement']}}</div>
+            <div>
+              <span class="badge badge-danger text-center"
+                >{{match['placement']}}</span
+              >
+            </div>
             {% else %}
-            <div class="text-success text-center">{{match['placement']}}</div>
+            <div>
+              <span class="badge badge-success text-center"
+                >{{match['placement']}}</span
+              >
+            </div>
 
             {% endif %} {% endfor %}
           </div>
+          {% if failed %}
+          <h5 class="m-2">
+            Sorry we couldn't find info for that summoner name
+          </h5>
+          <p class="m-2">Or the dev's API key could be expired....</p>
+          {% endif %}
           <div class="col-6"></div>
         </div>
       </div>
     </div>
-    <div class="col-sm">
-      <h3 class="text-center">Recent Compositions</h3>
-      {% for comp in recents %}
-      <div class="text-center">{{comp.name}}</div>
-      {% endfor %}
+    <div class="col-sm bg-grey m-2 border rounded">
+      <h3 class="text-center m-2">Recent Compositions</h3>
+      <ul class="list-group">
+        {% for comp in recents %}
+        <li class="list-group-item rounded m-1">
+          <a href="/teamviewer/{{comp.id}}" class="text-center"
+            >{{comp.name}}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+
       <!-- <a href="/stats_explorer" class="btn btn-lg btn-info"> Stat Explorer</a> -->
     </div>
   </div>

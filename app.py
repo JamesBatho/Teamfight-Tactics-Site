@@ -9,7 +9,9 @@ from sqlalchemy.exc import IntegrityError
 from forms import UserAddForm, UserEditForm, LoginForm
 import os 
 
-API_KEY = "RGAPI-7b843bf9-c460-4f3f-8349-5c55f1d91279"
+import pdb 
+
+from secrets import API_KEY
 
 CURR_USER_KEY = 'curr_user_id'
 
@@ -101,7 +103,9 @@ def logout():
     flash("Successfully logged out","success")
     return redirect('/')
         
-#composition builder
+#composition builder for users to build their compositions
+
+
 @app.route('/teambuilder')
 def teambuilder():
     """Provide functional teambuilder for user"""
@@ -138,6 +142,33 @@ def edit_comp(comp_id):
 
 
 ##############################################################################
+#Route for allowing the user to view other compositions- this will not be editable
+@app.route('/teamviewer/<int:comp_id>')
+def view_comp(comp_id):
+       # allow anyone to view compositions
+        comp = Composition.query.get_or_404(comp_id)
+        peice_ids = (comp.piece1_id,comp.piece2_id,comp.piece3_id,comp.piece4_id,comp.piece5_id,comp.piece6_id,comp.piece7_id,comp.piece8_id)
+        pieces = db.session.query(Piece).filter(Piece.id.in_(peice_ids)).all()
+        champ_ids = []
+        pos = [] 
+        for piece in pieces:
+            champ_ids.append(piece.id)
+            pos.append(piece.position)
+        champs = db.session.query(Champion).filter(Champion.id.in_(tuple(champ_ids))).all()
+
+        board = []
+        i = 0
+        while i < len(champs):
+            board.append([champs[i].img, champs[i].id, pos[i]])
+            i = i +1
+        
+        champions = db.session.query(Champion).all()
+        return render_template('view_comp.html', comp = comp, champions=champions, pieces = pieces, champs = champs, board = board)
+   
+
+
+
+
 # Homepage and error pages
 
 
@@ -151,29 +182,37 @@ def homepage():
     recents = db.session.query(Composition).order_by(Composition.timestamp.desc()).limit(10).all()
     ####get 10 most recent compositons 
     if g.user:
+
        #get user compositions
        own_comps = db.session.query(Composition).filter(Composition.creator_id == g.user.id).all()
-       summoner_name = g.user.summoner_name
-       summoner_info = requests.get(f'https://na1.api.riotgames.com/tft/summoner/v1/summoners/by-name/{summoner_name}?api_key={API_KEY}')
-       puuid = summoner_info.json()['puuid']
-
-       match_list = requests.get(f'https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?count=20&api_key={API_KEY}')
-
-       matches = match_list.json()
-       match_data = []
-
-       for match in matches:
-           match_info = requests.get(f'https://americas.api.riotgames.com/tft/match/v1/matches/{match}?api_key={API_KEY}')
-           match_json = match_info.json()['info']
-           game_length = round(match_json['game_length']/60,2)
-           for participant in match_json['participants']:
-               if participant['puuid'] == puuid:
-                   placement = participant['placement']
-                   game_data = {'game_length':game_length, 'placement':placement}
-                   match_data.append(game_data)
-
-       return render_template('home.html', recents = recents, own_comps = own_comps, match_data = match_data)
-
+       try: 
+           summoner_name = g.user.summoner_name
+           print(summoner_name)
+           summoner_info = requests.get(f'https://na1.api.riotgames.com/tft/summoner/v1/summoners/by-name/{summoner_name}?api_key={API_KEY}')
+           puuid = summoner_info.json()['puuid']
+           print(puuid)
+           match_list = requests.get(f'https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?count=20&api_key={API_KEY}')
+           matches = match_list.json()
+           if len(matches) == 0: 
+                raise(IntegrityError)
+           match_data = []
+           
+           for match in matches:
+               match_info = requests.get(f'https://americas.api.riotgames.com/tft/match/v1/matches/{match}?api_key={API_KEY}')
+               match_json = match_info.json()['info']
+               game_length = round(match_json['game_length']/60,2)
+               print(game_length)
+               for participant in match_json['participants']:
+                   if participant['puuid'] == puuid:
+                       placement = participant['placement']
+                       print(placement)
+                       game_data = {'game_length':game_length, 'placement':placement}
+                       match_data.append(game_data)
+                       print(match_data)
+                
+           return render_template('home.html', recents = recents, own_comps = own_comps, match_data = match_data)
+       except:
+           return render_template('home.html',recents = recents, failed=True, own_comps = own_comps)
     else:
         return render_template('home-anon.html',recents = recents)
 

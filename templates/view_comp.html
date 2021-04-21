@@ -1,0 +1,31 @@
+{% extends 'base.html' %} {% block content %}
+<div class="bg-grey border border-dark container rounded m-3 p-3">
+  <h1 class="text-center m-2">Teamviewer</h1>
+  <div class="row" id="whole">
+    <div class="col-9 container" id="board">
+      <ul id="grid" class="clear mb-5">
+        {% for n in range(28)%}
+        <li>
+          <div class="hexagon" id="{{n}}">
+            {% for champ in board %} {% if n == champ[2] %}
+            <img
+              src="/static/data/champions/{{champ[0]}}"
+              alt="{{champ.name}}"
+              id="{{champ[1]}}"
+            />
+            {% endif %} {% endfor %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <span> {% for champ in comp.champions %} {{champ.id}} {% endfor %} </span>
+      <div>
+        <h2 class="text-center">Team: {{comp.name}}</h2>
+      </div>
+      <a href="/" class="btn btn-info ml-5 text-center">Go Home</a>
+    </div>
+  </div>
+</div>
+<script src="/static/scripts/teambuilder.js"></script>
+
+{% endblock %}

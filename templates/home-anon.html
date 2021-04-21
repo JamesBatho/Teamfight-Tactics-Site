@@ -1,16 +1,25 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm">
+    <div class="col-sm border rounded p-3 m-3">
       <h3>Recent Compositions</h3>
-      {% for comp in recents %}
-      <div>{{comp.name}}</div>
-      {% endfor %}
+      <ul class="list-group">
+        {% for comp in recents %}
+        <li class="list-group-item rounded m-1">
+          <a href="/teamviewer/{{comp.id}}" class="text-center"
+            >{{comp.name}}</a
+          >
+        </li>
+        {% endfor %}
+      </ul>
       <!-- <a href="/stats_explorer" class="btn btn-lg btn-info"> Stat Explorer</a> -->
     </div>
-    <div class="col-sm">
+    <div class="col-sm border rounded p-3 m-3">
       <h3>Want to build a composition and see your stats?</h3>
-      <h3>Sign up by clicking <a href="/signup"> Here! </a></h3>
+      <h5>
+        Sign up and start improving today by clicking
+        <a href="/signup" class="text-info strokeme"> Here! </a>
+      </h5>
     </div>
   </div>
 </div>

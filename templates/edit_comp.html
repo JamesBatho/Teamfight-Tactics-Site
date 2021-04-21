@@ -1,57 +1,71 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Teambuilder</h1>
+<h1 class="text-center">Teambuilder</h1>
 <div class="container">
   <div class="row" id="whole">
-    <div
-      class="col-3"
-      id="champion_list"
-      ondrop="drop(event)"
-      ondragover="allowDrop(event)"
-    >
-      {% for champion in champions %}
-      <img
-        src="/static/data/champions/{{champion.img}}"
-        alt=""
-        draggable="true"
-        ondragstart="drag(event)"
-        id="{{champion.id}}"
-      />
-      {% endfor %}
-    </div>
-    <div class="col-9" id="board">
-      <ul id="grid" class="clear">
-        {% for n in range(28)%}
-        <li>
-          <div
-            class="hexagon"
-            ondrop="drop(event)"
-            ondragover="allowDrop(event)"
-            id="{{n}}"
-          >
-            {% for champ in board %} {% if n == champ[2] %}
-            <img
-              src="/static/data/champions/{{champ[0]}}"
-              alt=""
-              draggable="true"
-              ondragstart="drag(event)"
-              id="{{champ[1]}}"
-            />
-            {% endif %} {% endfor %}
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
-      <p class="mt-2">
-        Note: You must have 8 champions on the board in order to save
-      </p>
-      <span> {% for champ in comp.champions %} {{champ.id}} {% endfor %} </span>
-      <div>
-        <label for="comp"> Rename Your Composition:</label
-        ><input type="text" id="comp" value="{{comp.name}}" />
-      </div>
-      <button id="save" class="btn mt-4 btn-success">Save</button>
+    <div class="h-100 col-3 bg-grey border border-dark container rounded">
+      <h4 class="text-center m-3">Champion List</h4>
 
-      <a href="/teambuilder" class="btn mt-4 btn-warning mt-2"> Reset</a>
+      <div
+        id="champion_list"
+        ondrop="drop(event)"
+        ondragover="allowDrop(event)"
+      >
+        {% for champion in champions %}
+        <img
+          src="/static/data/champions/{{champion.img}}"
+          alt=""
+          draggable="true"
+          ondragstart="drag(event)"
+          id="{{champion.id}}"
+        />
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-8 bg-grey border border-dark container rounded">
+      <h3 class="text-center m-2">Team: {{comp.name}}</h3>
+      <div id="board">
+        <ul id="grid" class="clear">
+          {% for n in range(28)%}
+          <li>
+            <div
+              class="hexagon"
+              ondrop="drop(event)"
+              ondragover="allowDrop(event)"
+              id="{{n}}"
+            >
+              {% for champ in board %} {% if n == champ[2] %}
+              <img
+                src="/static/data/champions/{{champ[0]}}"
+                alt=""
+                draggable="true"
+                ondragstart="drag(event)"
+                id="{{champ[1]}}"
+              />
+              {% endif %} {% endfor %}
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        <br />
+        <p class="mt-2">
+          Note: You must have 8 champions on the board in order to save
+        </p>
+        <span>
+          {% for champ in comp.champions %} {{champ.id}} {% endfor %}
+        </span>
+        <div class="form-group">
+          <label for="comp" class="mr-2"> Rename Your Composition:</label
+          ><input
+            class="border border-dark rounded"
+            type="text"
+            id="comp"
+            value="{{comp.name}}"
+          />
+        </div>
+
+        <button id="save" class="btn btn-success">Save</button>
+        <a href="/teambuilder" class="btn btn-warning mt-2"> Reset</a>
+      </div>
     </div>
   </div>
 </div>

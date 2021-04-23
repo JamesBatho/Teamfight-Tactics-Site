@@ -1,17 +1,17 @@
 #Advanced Teamfight Tactics
 
-###Introduction 
+## Introduction 
 Greetings summoner, (or future summoner) welcome to my site. Here you'll be able to make your wildest dreams come true, well maybe not too too wild.
 
 This site is intended to provide players of Riot's *Teamfight Tactics* with additional insight into their own gameplay and the gameplay of others. Allowing them to improve at a much more rapid pace. 
 
 To access the site please click [here](https://adv-tft.herokuapp.com). Or copy: https://adv-tft.herokuapp.com into your address bar. 
 
-####Impetus for Creation
+### Impetus for Creation
 This site was born out of Springboard's software engineering course as my first Capstone Project. The main goals of this project were to generate a website that pull data from an API and provides a user with basic CRUD functionality on the site. 
 
 
-###Functionality
+## Functionality
 This website provides multiple features to provide a seamless user experience. Some of the highlights are:
   
 * The ability to create a user account  
@@ -21,7 +21,7 @@ This website provides multiple features to provide a seamless user experience. S
 * Allowing the user to create and save a new composition using Teambuilder
 * Allow the creator of a composition to edit it
 
-###User Flow
+## User Flow
 A typical user will arrive at the anonymous homepage where they can view recent compositions created by our users and see the `Signup` and `Login` buttons. 
 
 After clicking `Signup` the user is redirected to a signup form. Once the form is filled out and is validated the user will be redirected back to the logged-in homepage. Here they can view their own statistics and have access to the recent compositions as well as the `Teambuilder`. 
@@ -30,7 +30,7 @@ Clicking the `Teambuilder` button redirects the user to the `Teambuilder` route.
 
 Once the user is done using the site they can click `Logout` to end their session and complete their use of the site.  
 
-###API Information
+## API Information
 The API used to gather player and game data is Riot Games' API. 
 
 This site uses a free API key provided by RIOT to developers. Unfortunately it is only valid for 24hours and must be refreshed every day in order to keep pulling player data. 
@@ -41,34 +41,34 @@ https://developer.riotgames.com/apis#tft-league-v1
 While the Base URL for API requests uses this string:
 `https://na1.api.riotgames.com/tft`
 
-###Technologies Used
-####Frontend 
+## Technologies Used
+### Frontend 
 
 This site uses Python and Flask to define the routes for the frontend. Each route uses HTML with Jinja templating, JavaScript and CSS to show the content to the user. 
 
-#####Forms
+#### Forms
 Forms are created using Flask-WTForms and rendered using Jinja templating. 
 
-####Backend
+### Backend
 
 Communication with the database and database model creation is done through Flask SQLAlchemy. 
 
-#####Database
+#### Database
 This site uses Postgres and Heroku's Postgres extension to provide database functionality. 
 
 A link to the schema diagram can be found [here](https://dbdiagram.io/d/600bb2c880d742080a37878b)
 Or here: https://dbdiagram.io/d/600bb2c880d742080a37878b
 
-#####Authentication and Authorization
+#### Authentication and Authorization
 
 Authentication is done using Bcrypt while Authorization is complete by using Flask's `g` object to keep track of the current user. 
 
-####Hosting
+### Hosting
 This site is hosted using Heroku and some static files are hosted through AWS's S3 storage. 
 
 
 
-###Future Site Improvements
+## Future Site Improvements
 
 While the site is currently functional a number of imrovements have been identified that would greatly improve the user's experience. 
 
@@ -84,4 +84,5 @@ In no particular order:
 * Generate additional stats for champions
 * 	Incorporate ability use into DPS 
 *  Provide some tips for newer players and general strategy ideas.
+*  Incorporate testing of routes for maintainability
 

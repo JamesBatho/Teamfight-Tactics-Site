@@ -1,4 +1,4 @@
-#Advanced Teamfight Tactics
+# Advanced Teamfight Tactics
 
 ## Introduction 
 Greetings summoner, (or future summoner) welcome to my site. Here you'll be able to make your wildest dreams come true, well maybe not too too wild.

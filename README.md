@@ -64,7 +64,7 @@ Or here: https://dbdiagram.io/d/600bb2c880d742080a37878b
 Authentication is done using Bcrypt while Authorization is complete by using Flask's `g` object to keep track of the current user. 
 
 ### Hosting
-This site is hosted using Heroku and some static files are hosted through AWS's S3 storage. 
+This site is hosted using Heroku and some static files are hosted through AWS's S3 storage and served using AWS's CloudFront. 
 
 
 
